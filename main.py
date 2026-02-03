@@ -14,28 +14,24 @@ NO_TEXTS = [
     "Na pewno nie?",
     "Jak możesz ;__;",
     "No weeeeź Iza",
-    "Co za harpia",
+    "Co za harpia...",
 ]
 
-last_text = no.text
+idx = 0  # start
 
-def random_no_text():
-    global last_text
-    choices = [t for t in NO_TEXTS if t != last_text]
-    new_text = random.choice(choices)
-    last_text = new_text
-    return new_text
+def set_no_text():
+    global idx
+    no.text = NO_TEXTS[idx]
+    if idx < len(NO_TEXTS) - 1:
+        idx += 1
 
 def apply_transform():
-    yes.style.transform = f"translate(20px, -50%) scale({scale})"
+    yes.style.transform = f"translate(60px, -50%) scale({scale})"
 
 def on_no(ev):
     global scale
+    set_no_text()
 
-    # zmiana tekstu "Nie"
-    no.text = random_no_text()
-
-    # powiększ "Tak"
     scale *= 1.35
     apply_transform()
 
@@ -51,4 +47,5 @@ def on_yes(ev):
 no.bind("click", on_no)
 yes.bind("click", on_yes)
 
+set_no_text()
 apply_transform()
