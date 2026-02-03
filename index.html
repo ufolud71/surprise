@@ -16,6 +16,14 @@
       --shadow: 0 12px 40px rgba(0,0,0,0.18);
     }
 
+    #app,
+    #no-boundary {
+      visibility: hidden;
+      opacity: 0;
+      pointer-events: none; /* prevent interaction until ready */
+      transition: opacity 160ms ease, visibility 0ms linear 160ms;
+    }
+
     #confetti{
       position: fixed;
       inset: 0;
@@ -88,14 +96,7 @@
       margin-top: 12px;
     }
 
-    /* NEW: invisible fixed container that bounds the #no button movement */
-    #no-boundary{
-      position: fixed;
-      inset: 0;                 /* full viewport */
-      padding: 20px;           /* internal padding - button won't go into padding */
-      pointer-events: none;    /* so it doesn't block other interactions */
-      z-index: 10000;
-    }
+    /* NEW: invisible fixed container that bounds the #no button movement *
 
     /* #no is now absolutely positioned INSIDE the fixed boundary.
        pointer-events:auto so the button is clickable even though the boundary is not. */
