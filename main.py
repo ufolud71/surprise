@@ -113,7 +113,8 @@ def place_no_mirrored():
     try:
         boundary.style.visibility = "visible"
         boundary.style.opacity = "1"
-        boundary.style.pointerEvents = "auto"
+        # keep boundary pointer-events NONE so it doesn't block clicks
+        # boundary.style.pointerEvents = "none"
     except Exception:
         pass
 
@@ -124,7 +125,7 @@ def place_no_mirrored():
     except Exception:
         pass
 
-    # Also make the #no interactive now
+    # Also make the #no interactive now (only the button receives pointer events)
     try:
         no.style.visibility = "visible"
         no.style.opacity = "1"
