@@ -42,37 +42,60 @@ def rects_intersect(a, b):
     return not (a[2] <= b[0] or a[0] >= b[2] or a[3] <= b[1] or a[1] >= b[3])
 
 def move_no_anywhere_avoiding_yes():
-    """Ucieka po całym ekranie (viewport) i nie ląduje pod 'Tak'."""
+    """Ucieka po całym ekranie, ale NIGDY nie wychodzi poza viewport i nie ląduje pod 'Tak'."""
     yesr = yes.getBoundingClientRect()
+
+    # Rozmiar "Nie" (po aktualnym tekście)
     nor = no.getBoundingClientRect()
     no_w = nor.width
     no_h = nor.height
 
-    pad = 12
-    buf = 16
+    # Margines od krawędzi ekranu (żeby nie było przy samej krawędzi)
+    edge = 12
+
+    # Bufor wokół "Tak", żeby "Nie" nie lądowało pod nim / przy nim
+    buf = 18
 
     vw = window.innerWidth
     vh = window.innerHeight
 
-    min_x = pad + no_w / 2
-    max_x = max(min_x, vw - pad - no_w / 2)
-    min_y = pad + no_h / 2
-    max_y = max(min_y, vh - pad - no_h / 2)
+    # Zakres, w którym środek przycisku może się znaleźć, żeby CAŁY był na ekranie
+    min_x = edge + no_w / 2
+    max_x = vw - edge - no_w / 2
+    min_y = edge + no_h / 2
+    max_y = vh - edge - no_h / 2
+
+    # Jeśli ekran jest zbyt mały na przycisk, po prostu przyklej go w bezpieczne miejsce
+    if max_x < min_x or max_y < min_y:
+        no.style.left = f"{vw * 0.5}px"
+        no.style.top = f"{vh * 0.15}px"
+        no.style.transform = "translate(-50%, -50%)"
+        return
+
+    def rects_intersect(a, b):
+        return not (a[2] <= b[0] or a[0] >= b[2] or a[3] <= b[1] or a[1] >= b[3])
 
     yes_rect = (yesr.left - buf, yesr.top - buf, yesr.right + buf, yesr.bottom + buf)
 
-    for _ in range(60):
+    # Próbujemy znaleźć miejsce bez kolizji z "Tak"
+    for _ in range(80):
         x = random.uniform(min_x, max_x)
         y = random.uniform(min_y, max_y)
+
+        # prostokąt "Nie" w viewport
         no_rect = (x - no_w/2, y - no_h/2, x + no_w/2, y + no_h/2)
 
         if not rects_intersect(no_rect, yes_rect):
+            # Clamp na wszelki wypadek (gwarancja 100%)
+            x = max(min_x, min(x, max_x))
+            y = max(min_y, min(y, max_y))
+
             no.style.left = f"{x}px"
             no.style.top = f"{y}px"
             no.style.transform = "translate(-50%, -50%)"
             return
 
-    # awaryjnie róg
+    # awaryjnie: miejsce daleko od "Tak" (np. lewy górny róg)
     no.style.left = f"{min_x}px"
     no.style.top = f"{min_y}px"
     no.style.transform = "translate(-50%, -50%)"
