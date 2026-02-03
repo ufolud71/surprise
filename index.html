@@ -10,22 +10,72 @@
   <script src="https://cdn.jsdelivr.net/npm/brython@3.11.3/brython_stdlib.js"></script>
 
   <style>
-    body { font-family: Arial, sans-serif; display:flex; justify-content:center; align-items:center; height:100vh; margin:0; }
-    .card { text-align:center; padding:24px; border:1px solid #ddd; border-radius:16px; width:min(520px, 92vw); }
-    #yes { font-size: 22px; padding: 12px 22px; margin: 10px; }
-    #no  { font-size: 22px; padding: 12px 22px; margin: 10px; }
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background: #fff;
+    }
+
+    .card {
+      text-align: center;
+      padding: 24px;
+      border: 1px solid #ddd;
+      border-radius: 16px;
+      width: min(520px, 92vw);
+    }
+
+    .buttons {
+      position: relative;
+      height: 120px;
+      margin-top: 16px;
+    }
+
+    #no {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-120px, -50%);
+      font-size: 22px;
+      padding: 12px 22px;
+      z-index: 1;
+      cursor: pointer;
+    }
+
+    #yes {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(20px, -50%);
+      font-size: 22px;
+      padding: 12px 22px;
+      z-index: 10; /* NA WIERZCHU */
+      cursor: pointer;
+      transition: transform 0.15s ease-out;
+    }
+
+    #msg {
+      margin-top: 12px;
+      font-size: 16px;
+    }
   </style>
 </head>
 
 <body onload="brython()">
   <div class="card">
     <h2 id="q">Czy chcesz zostać moją walentynką? 💖</h2>
-    <button id="yes">Tak</button>
-    <button id="no">Nie</button>
+
+    <div class="buttons">
+      <button id="no">Nie</button>
+      <button id="yes">Tak</button>
+    </div>
+
     <p id="msg"></p>
   </div>
 
-  <!-- Python działa bezpośrednio -->
   <script type="text/python" src="main.py"></script>
 </body>
 </html>
