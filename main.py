@@ -2,8 +2,8 @@ from browser import document, window
 import random
 
 # ----------------- Tunable timing parameters -----------------
-HOVER_DELAY = 60           # ms: how long to wait on hover before moving (was 140)
-CLICK_MOVE_DELAY = 10      # ms: delay after click to schedule a move (was 80)
+HOVER_DELAY = 60           # ms: how long to wait on hover before moving
+CLICK_MOVE_DELAY = 10      # ms: delay after click to schedule a move
 TRANSITION_RESTORE_DELAY = 60  # ms: restore CSS transition after turning it off
 INITIAL_RECHECK_DELAY = 180    # ms: second placement re-check after initial placement
 # --------------------------------------------------------------
@@ -56,7 +56,7 @@ def apply_transform():
 
 # Mirror initial NO position across the center of the small buttons frame,
 # but clamp so it never starts outside the allowed boundary.
-# Also reveal the button after placement so it never jumps visibly.
+# Also reveal the whole UI after placement so everything appears together.
 def place_no_mirrored():
     # compute centers in viewport coordinates
     brect = buttonsArea.getBoundingClientRect()
@@ -109,26 +109,29 @@ def place_no_mirrored():
     no.style.top = f"{int(cy)}px"
     no.style.transform = "translate(-50%, -50%)"
 
-    # Reveal the button and the app at once (so it doesn't pop in alone)
-    # Reveal boundary (and enable pointer events there)
-    boundary.style.visibility = "visible"
-    boundary.style.opacity = "1"
-    boundary.style.pointerEvents = "auto"
+    # Reveal the boundary and app together (so they appear at the same time)
+    try:
+        boundary.style.visibility = "visible"
+        boundary.style.opacity = "1"
+        boundary.style.pointerEvents = "auto"
+    except Exception:
+        pass
 
-    # Reveal app/card together
-    app.style.visibility = "visible"
-    app.style.opacity = "1"
-    app.style.pointerEvents = "auto"
+    try:
+        app.style.visibility = "visible"
+        app.style.opacity = "1"
+        app.style.pointerEvents = "auto"
+    except Exception:
+        pass
 
     # Also make the #no interactive now
-    no.style.visibility = "visible"
-    no.style.opacity = "1"
-    no.style.pointerEvents = "auto"
+    try:
+        no.style.visibility = "visible"
+        no.style.opacity = "1"
+        no.style.pointerEvents = "auto"
+    except Exception:
+        pass
 
-    # restore transition shortly after (so later moves animate)
-    def restore_trans():
-        no.style.transition = prev_trans or "left 0.12s ease, top 0.12s ease"
-    window.setTimeout(restore_trans, TRANSITION_RESTORE_DELAY)
     # restore transition shortly after (so later moves animate)
     def restore_trans():
         no.style.transition = prev_trans or "left 0.12s ease, top 0.12s ease"
