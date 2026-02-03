@@ -7,17 +7,18 @@ no  = document["no"]
 msg = document["msg"]
 q   = document["q"]
 
+def apply_transform():
+    # Ważne: zachowujemy translate, a dokładamy skalę
+    yes.style.transform = f"translate(20px, -50%) scale({scale})"
+
 def on_no(ev):
     global scale
     scale *= 1.35
-    yes.style.fontSize = f"{22 * scale}px"
-    yes.style.padding  = f"{12 * scale}px {22 * scale}px"
+    apply_transform()
 
-    if scale > 6:
-        msg.text = "Ups… chyba jednak TAK 😄"
-        no.disabled = True
-        yes.style.width = "90%"
-        yes.style.height = "180px"
+    # opcjonalnie: jak już jest spore, to można zablokować "Nie"
+    if scale > 2.2:
+        msg.text = "Ej no… 😄"
 
 def on_yes(ev):
     q.text = "Yay!! 💘💘💘"
@@ -27,3 +28,5 @@ def on_yes(ev):
 
 no.bind("click", on_no)
 yes.bind("click", on_yes)
+
+apply_transform()
