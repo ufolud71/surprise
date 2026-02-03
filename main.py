@@ -42,63 +42,62 @@ def rects_intersect(a, b):
     return not (a[2] <= b[0] or a[0] >= b[2] or a[3] <= b[1] or a[1] >= b[3])
 
 def move_no_anywhere_avoiding_yes():
-    """Ucieka po całym ekranie, ale NIGDY nie wychodzi poza viewport i nie ląduje pod 'Tak'."""
-    yesr = yes.getBoundingClientRect()
-
-    # Rozmiar "Nie" (po aktualnym tekście)
-    nor = no.getBoundingClientRect()
-    no_w = nor.width
-    no_h = nor.height
-
-    # Margines od krawędzi ekranu (żeby nie było przy samej krawędzi)
-    edge = 12
-
-    # Bufor wokół "Tak", żeby "Nie" nie lądowało pod nim / przy nim
-    buf = 18
-
+    """Ucieka po ekranie, ale twardo zostaje w viewport i nie ląduje pod 'Tak'."""
     vw = window.innerWidth
     vh = window.innerHeight
+    edge = 12      # margines od krawędzi
+    buf = 18       # bufor wokół "Tak"
 
-    # Zakres, w którym środek przycisku może się znaleźć, żeby CAŁY był na ekranie
-    min_x = edge + no_w / 2
-    max_x = vw - edge - no_w / 2
-    min_y = edge + no_h / 2
-    max_y = vh - edge - no_h / 2
-
-    # Jeśli ekran jest zbyt mały na przycisk, po prostu przyklej go w bezpieczne miejsce
-    if max_x < min_x or max_y < min_y:
-        no.style.left = f"{vw * 0.5}px"
-        no.style.top = f"{vh * 0.15}px"
-        no.style.transform = "translate(-50%, -50%)"
-        return
+    yesr = yes.getBoundingClientRect()
 
     def rects_intersect(a, b):
-        return not (a[2] <= b[0] or a[0] >= b[2] or a[3] <= b[1] or a[1] >= b[3])
+        return not (a.right <= b.left or a.left >= b.right or a.bottom <= b.top or a.top >= b.bottom)
 
-    yes_rect = (yesr.left - buf, yesr.top - buf, yesr.right + buf, yesr.bottom + buf)
+    # "strefa zakazana" wokół TAK
+    yes_box = {
+        "left": yesr.left - buf,
+        "top": yesr.top - buf,
+        "right": yesr.right + buf,
+        "bottom": yesr.bottom + buf,
+    }
 
-    # Próbujemy znaleźć miejsce bez kolizji z "Tak"
+    # próbujemy kilka razy znaleźć miejsce
     for _ in range(80):
-        x = random.uniform(min_x, max_x)
-        y = random.uniform(min_y, max_y)
+        # losujemy "gdziekolwiek"
+        x = random.uniform(edge, vw - edge)
+        y = random.uniform(edge, vh - edge)
 
-        # prostokąt "Nie" w viewport
-        no_rect = (x - no_w/2, y - no_h/2, x + no_w/2, y + no_h/2)
+        # ustawiamy wstępnie
+        no.style.left = f"{x}px"
+        no.style.top = f"{y}px"
+        no.style.transform = "translate(-50%, -50%)"
 
-        if not rects_intersect(no_rect, yes_rect):
-            # Clamp na wszelki wypadek (gwarancja 100%)
-            x = max(min_x, min(x, max_x))
-            y = max(min_y, min(y, max_y))
+        # mierzymy realny rozmiar i korygujemy, żeby CAŁY był w viewport
+        r = no.getBoundingClientRect()
 
-            no.style.left = f"{x}px"
-            no.style.top = f"{y}px"
-            no.style.transform = "translate(-50%, -50%)"
+        dx = 0
+        dy = 0
+
+        if r.left < edge: dx += (edge - r.left)
+        if r.right > vw - edge: dx -= (r.right - (vw - edge))
+        if r.top < edge: dy += (edge - r.top)
+        if r.bottom > vh - edge: dy -= (r.bottom - (vh - edge))
+
+        if dx != 0 or dy != 0:
+            # dopychamy
+            no.style.left = f"{x + dx}px"
+            no.style.top  = f"{y + dy}px"
+            r = no.getBoundingClientRect()
+
+        # jeśli po korekcie nadal nachodzi na TAK → losuj dalej
+        no_box = r
+        if not rects_intersect(no_box, type("obj", (), yes_box)()):
             return
 
-    # awaryjnie: miejsce daleko od "Tak" (np. lewy górny róg)
-    no.style.left = f"{min_x}px"
-    no.style.top = f"{min_y}px"
-    no.style.transform = "translate(-50%, -50%)"
+    # awaryjnie: lewy górny róg (na pewno w ekranie)
+    no.style.left = f"{edge + 20}px"
+    no.style.top = f"{edge + 20}px"
+    no.style.transform = "translate(0, 0)"
 
 def put_no_under_yes():
     """Ustaw 'Nie' dokładnie pod 'Tak' + niższy z-index, żeby zostało zasłonięte."""
