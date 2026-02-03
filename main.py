@@ -38,7 +38,7 @@ def apply_transform():
 def on_no(ev):
     global scale
     bgm = document["bgm"]
-    bgm.volume = 0.35
+    bgm.volume = 0.1
     bgm.play()
     set_no_text()
 
@@ -47,7 +47,7 @@ def on_no(ev):
 
 def on_yes(ev):
     bgm = document["bgm"]
-    bgm.volume = 0.35
+    bgm.volume = 0.1
     bgm.play()
     # ukryj ekran 1
     app.style.display = "none"
