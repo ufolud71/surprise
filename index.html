@@ -43,7 +43,6 @@
         linear-gradient(135deg, #ff6fb1, #ffd36e, #7ad3ff);
     }
 
-    /* lekkie “serduszka” w tle */
     .hearts{
       position:fixed;
       inset:0;
@@ -88,12 +87,12 @@
       margin-top: 12px;
     }
 
-    /* NEW: invisible fixed container that bounds the #no button movement */
+    /* invisible fixed container that bounds the #no button movement */
     #no-boundary{
       position: fixed;
       inset: 0;                 /* full viewport */
       padding: 20px;           /* internal padding - button won't go into padding */
-      pointer-events: none;    /* disabled until script reveals it */
+      pointer-events: none;    /* keep non-interactive so it doesn't block clicks */
       z-index: 10000;
 
       /* start hidden until script positions + reveals whole UI at once */
@@ -217,7 +216,7 @@
     <p id="msg"></p>
   </div>
 
-  <!-- NEW: boundary container lives at top level and contains the #no button -->
+  <!-- boundary container lives at top level and contains the #no button -->
   <div id="no-boundary">
     <button id="no">Nie</button>
   </div>
