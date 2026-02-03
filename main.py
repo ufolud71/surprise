@@ -42,6 +42,9 @@ def rects_intersect(a, b):
     return not (a[2] <= b[0] or a[0] >= b[2] or a[3] <= b[1] or a[1] >= b[3])
 
 def move_no_anywhere_avoiding_yes():
+    # Force browser to calculate new size after text change
+    _ = no.offsetHeight  # triggers reflow
+    
     vw = window.innerWidth
     vh = window.innerHeight
     
@@ -49,9 +52,9 @@ def move_no_anywhere_avoiding_yes():
     no_width = nor.width
     no_height = nor.height
     
-    # większe marginesy bezpieczeństwa
-    edge = max(30, no_width/2 + 10)
-    buf = 25
+    # Much larger safety margins
+    margin = 40
+    buf = 30
 
     yesr = yes.getBoundingClientRect()
 
@@ -62,14 +65,21 @@ def move_no_anywhere_avoiding_yes():
         "bottom": yesr.bottom + buf,
     }
 
-    for _ in range(100):
-        # CLAMP to safe range
-        x = random.uniform(edge, vw - edge)
-        y = random.uniform(edge, vh - edge)
+    for _ in range(150):
+        # Calculate safe bounds FIRST
+        min_x = margin + no_width/2
+        max_x = vw - margin - no_width/2
+        min_y = margin + no_height/2
+        max_y = vh - margin - no_height/2
         
-        # dodatkowe clampowanie
-        x = max(no_width/2 + 10, min(x, vw - no_width/2 - 10))
-        y = max(no_height/2 + 10, min(y, vh - no_height/2 - 10))
+        # Skip if button is too wide for viewport
+        if min_x >= max_x or min_y >= max_y:
+            no.style.left = "50%"
+            no.style.top = "20%"
+            return
+        
+        x = random.uniform(min_x, max_x)
+        y = random.uniform(min_y, max_y)
 
         test_box = {
             "left": x - no_width/2,
@@ -78,18 +88,20 @@ def move_no_anywhere_avoiding_yes():
             "bottom": y + no_height/2,
         }
 
-        if not (test_box["right"] <= yes_box["left"] or test_box["left"] >= yes_box["right"] or 
-                test_box["bottom"] <= yes_box["top"] or test_box["top"] >= yes_box["bottom"]):
-            continue
+        # Check collision with yes button
+        collides = not (test_box["right"] <= yes_box["left"] or 
+                       test_box["left"] >= yes_box["right"] or 
+                       test_box["bottom"] <= yes_box["top"] or 
+                       test_box["top"] >= yes_box["bottom"])
+        
+        if not collides:
+            no.style.left = f"{x}px"
+            no.style.top = f"{y}px"
+            no.style.transform = "translate(-50%, -50%)"
+            return
 
-        no.style.left = f"{x}px"
-        no.style.top = f"{y}px"
-        no.style.transform = "translate(-50%, -50%)"
-        return
-
-    # fallback
-    no.style.left = "100px"
-    no.style.top = "100px"
+    no.style.left = "80px"
+    no.style.top = "80px"
     no.style.transform = "translate(-50%, -50%)"
 
     def rects_intersect_check(a, b):
