@@ -1,20 +1,16 @@
-from js import document
-from pyodide.ffi import create_proxy
+from pyscript import document, when
 
 scale = 1.0
 
-# trzymamy referencje globalnie, żeby proxy nie zostało zniszczone
-_yes_cb = None
-_no_cb = None
-
-yes = document.getElementById("yes")
-no  = document.getElementById("no")
-msg = document.getElementById("msg")
-q   = document.getElementById("q")
-
+@when("click", "#no")
 def on_no(event):
     global scale
     scale *= 1.35
+
+    yes = document.querySelector("#yes")
+    msg = document.querySelector("#msg")
+    no  = document.querySelector("#no")
+
     yes.style.fontSize = f"{22 * scale}px"
     yes.style.padding  = f"{12 * scale}px {22 * scale}px"
 
@@ -24,15 +20,14 @@ def on_no(event):
         yes.style.width = "90%"
         yes.style.height = "180px"
 
+@when("click", "#yes")
 def on_yes(event):
+    q   = document.querySelector("#q")
+    msg = document.querySelector("#msg")
+    yes = document.querySelector("#yes")
+    no  = document.querySelector("#no")
+
     q.innerText = "Yay!! 💘💘💘"
     msg.innerText = "To randka! 😍"
     yes.disabled = True
     no.disabled = True
-
-# tworzymy proxy i przypinamy
-_no_cb  = create_proxy(on_no)
-_yes_cb = create_proxy(on_yes)
-
-no.addEventListener("click", _no_cb)
-yes.addEventListener("click", _yes_cb)
