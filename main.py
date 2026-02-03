@@ -20,6 +20,7 @@ NO_TEXTS = [
     "Iza plis 🙏",
     "Jak możesz ;__;",
     "Na pewno nie?",
+    "Szkoda strzępić ryja",
 ]
 
 idx = 0
@@ -40,9 +41,6 @@ def on_no(ev):
     scale *= 1.35
     apply_transform()
 
-    if scale > 2.2:
-        msg.text = "Ej no… 😄"
-
 def on_yes(ev):
     # ukryj ekran 1
     app.style.display = "none"
@@ -51,8 +49,8 @@ def on_yes(ev):
     final.style.display = "block"
 
     # ustaw treści finału (możesz tu wpisać co chcesz)
-    finalTitle.text = "TAK!! 💘💘💘"
-    finalText.text = "To randka! Widzimy się w Walentynki ❤️"
+    finalTitle.text = "Less GOOOOO!! 💘💘💘"
+    finalText.text = "To randka! Widzimy się po powrocie ❤️"
 
 no.bind("click", on_no)
 yes.bind("click", on_yes)
