@@ -1,4 +1,5 @@
 from browser import document
+import random
 
 scale = 1.0
 
@@ -7,16 +8,37 @@ no  = document["no"]
 msg = document["msg"]
 q   = document["q"]
 
+# Teksty na przycisku "Nie"
+NO_TEXTS = [
+    "Nie",
+    "Na pewno nie?",
+    "Jak możesz ;__;",
+    "No weeeeź Iza",
+    "Co za harpia",
+]
+
+last_text = no.text
+
+def random_no_text():
+    global last_text
+    choices = [t for t in NO_TEXTS if t != last_text]
+    new_text = random.choice(choices)
+    last_text = new_text
+    return new_text
+
 def apply_transform():
-    # Ważne: zachowujemy translate, a dokładamy skalę
     yes.style.transform = f"translate(20px, -50%) scale({scale})"
 
 def on_no(ev):
     global scale
+
+    # zmiana tekstu "Nie"
+    no.text = random_no_text()
+
+    # powiększ "Tak"
     scale *= 1.35
     apply_transform()
 
-    # opcjonalnie: jak już jest spore, to można zablokować "Nie"
     if scale > 2.2:
         msg.text = "Ej no… 😄"
 
