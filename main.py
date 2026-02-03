@@ -114,7 +114,6 @@ def place_no_mirrored():
         boundary.style.visibility = "visible"
         boundary.style.opacity = "1"
         # keep boundary pointer-events NONE so it doesn't block clicks
-        # boundary.style.pointerEvents = "none"
     except Exception:
         pass
 
