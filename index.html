@@ -102,7 +102,6 @@
     #no{
       position: absolute;
       box-sizing: border-box;
-      /* initial center-ish placement inside boundary */
       left:30%;
       top:50%;
       transform: translate(-50%, -50%);
@@ -110,7 +109,10 @@
       padding: 12px 22px;
       z-index: 10001;
       cursor: pointer;
-      pointer-events: auto;
+      pointer-events: none;     /* disabled until script reveals it */
+      visibility: hidden;       /* hidden until positioned */
+      opacity: 0;
+      transition: opacity 0.12s ease, transform 0.12s ease;
 
       /* smaller max-width to help small screens */
       max-width: min(260px, 70vw);
