@@ -1,5 +1,4 @@
 from browser import document
-import random
 
 scale = 1.0
 
@@ -8,7 +7,11 @@ no  = document["no"]
 msg = document["msg"]
 q   = document["q"]
 
-# Teksty na przycisku "Nie"
+app = document["app"]
+final = document["final"]
+finalTitle = document["finalTitle"]
+finalText = document["finalText"]
+
 NO_TEXTS = [
     "Nie",
     "Co za harpia...",
@@ -19,7 +22,7 @@ NO_TEXTS = [
     "Na pewno nie?",
 ]
 
-idx = 0  # start
+idx = 0
 
 def set_no_text():
     global idx
@@ -28,7 +31,7 @@ def set_no_text():
         idx += 1
 
 def apply_transform():
-    yes.style.transform = f"translate(60px, -50%) scale({scale})"
+    yes.style.transform = f"translate(70px, -50%) scale({scale})"
 
 def on_no(ev):
     global scale
@@ -41,10 +44,15 @@ def on_no(ev):
         msg.text = "Ej no… 😄"
 
 def on_yes(ev):
-    q.text = "Yay!! 💘💘💘"
-    msg.text = "To randka! 😍"
-    yes.disabled = True
-    no.disabled = True
+    # ukryj ekran 1
+    app.style.display = "none"
+
+    # pokaż ekran 2
+    final.style.display = "block"
+
+    # ustaw treści finału (możesz tu wpisać co chcesz)
+    finalTitle.text = "TAK!! 💘💘💘"
+    finalText.text = "To randka! Widzimy się w Walentynki ❤️"
 
 no.bind("click", on_no)
 yes.bind("click", on_yes)
