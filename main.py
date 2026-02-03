@@ -11,10 +11,12 @@ q   = document["q"]
 # Teksty na przycisku "Nie"
 NO_TEXTS = [
     "Nie",
-    "Na pewno nie?",
-    "Jak możesz ;__;",
-    "No weeeeź Iza",
     "Co za harpia...",
+    "No weeeeź Iza",
+    "Budzik, obudź się",
+    "Iza plis 🙏",
+    "Jak możesz ;__;",
+    "Na pewno nie?",
 ]
 
 idx = 0  # start
