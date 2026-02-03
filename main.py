@@ -1,7 +1,9 @@
-from browser import document
 from browser import document, window
+import random
 
 scale = 1.0
+no_clicks = 0
+hover_enabled = False
 
 yes = document["yes"]
 no  = document["no"]
@@ -35,33 +37,57 @@ def set_no_text():
 def apply_transform():
     yes.style.transform = f"translate(70px, -50%) scale({scale})"
 
+def move_no_randomly():
+    # losowe miejsce w obrębie kontenera przycisków
+    x = random.randint(10, 90)
+    y = random.randint(20, 80)
+
+    no.style.left = f"{x}%"
+    no.style.top = f"{y}%"
+    no.style.transform = "translate(-50%, -50%)"
+
 def on_no(ev):
-    global scale
+    global scale, no_clicks, hover_enabled
+
+    no_clicks += 1
+
     bgm = document["bgm"]
     bgm.volume = 0.1
     bgm.play()
+
     set_no_text()
 
     scale *= 1.35
     apply_transform()
 
+    # po 3 kliknięciach aktywujemy uciekanie na hover
+    if no_clicks >= 3 and not hover_enabled:
+        hover_enabled = True
+        msg.text = "Ej! On teraz ucieka 😈"
+        no.style.transition = "left 0.15s ease, top 0.15s ease"
+
+def on_no_hover(ev):
+    if hover_enabled:
+        move_no_randomly()
+
 def on_yes(ev):
     bgm = document["bgm"]
     bgm.volume = 0.1
     bgm.play()
-    # ukryj ekran 1
-    app.style.display = "none"
 
-    # pokaż ekran 2
+    app.style.display = "none"
     final.style.display = "block"
 
-    # ustaw treści finału (możesz tu wpisać co chcesz)
     finalTitle.text = "Less GOOOOO!! 💘💘💘"
     finalText.text = "To randka! Widzimy się po powrocie ❤️"
-    window.party() 
 
+    window.party()
+
+# eventy
 no.bind("click", on_no)
+no.bind("mouseover", on_no_hover)
 yes.bind("click", on_yes)
 
+# start
 set_no_text()
 apply_transform()
