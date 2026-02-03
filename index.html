@@ -38,21 +38,27 @@
       position: absolute;
       left: 50%;
       top: 50%;
-      transform: translate(-120px, -50%);
+      transform: translate(-160px, -50%);  /* bardziej w lewo */
       font-size: 22px;
       padding: 12px 22px;
       z-index: 1;
       cursor: pointer;
+
+  /* żeby długie teksty wyglądały dobrze */
+      max-width: min(320px, 70vw);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     #yes {
       position: absolute;
       left: 50%;
       top: 50%;
-      transform: translate(20px, -50%);
+      transform: translate(60px, -50%);    /* bardziej w prawo */
       font-size: 22px;
       padding: 12px 22px;
-      z-index: 10; /* NA WIERZCHU */
+      z-index: 10;
       cursor: pointer;
       transition: transform 0.15s ease-out;
     }
