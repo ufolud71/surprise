@@ -1,4 +1,5 @@
 from browser import document
+from browser import document, window
 
 scale = 1.0
 
@@ -51,6 +52,7 @@ def on_yes(ev):
     # ustaw treści finału (możesz tu wpisać co chcesz)
     finalTitle.text = "Less GOOOOO!! 💘💘💘"
     finalText.text = "To randka! Widzimy się po powrocie ❤️"
+    window.party() 
 
 no.bind("click", on_no)
 yes.bind("click", on_yes)
