@@ -5,9 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>💘 Walentynki</title>
 
-  <!-- PyScript -->
-  <link rel="stylesheet" href="https://pyscript.net/latest/pyscript.css" />
-  <script defer src="https://pyscript.net/latest/pyscript.js"></script>
+  <!-- PyScript CORE (stabilniejszy sposób) -->
+  <link rel="stylesheet" href="https://pyscript.net/releases/2025.11.1/core.css" />
+  <script type="module" src="https://pyscript.net/releases/2025.11.1/core.js"></script>
 
   <style>
     body { font-family: Arial, sans-serif; display:flex; justify-content:center; align-items:center; height:100vh; margin:0; }
@@ -24,6 +24,8 @@
     <p id="msg"></p>
   </div>
 
-  <py-script src="main.py"></py-script>
+  <!-- zamiast <py-script> -->
+  <script type="py" src="./main.py"></script>
 </body>
 </html>
+
